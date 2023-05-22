@@ -10,8 +10,8 @@ class Database
     {
         try
         {
-            // $this->connection = new PDO('mysql:host=localhost;dbname=backup test', USER, PASSWORD,
-            $this->connection = new PDO('mysql:host=localhost;dbname=sitemanager', "bitrix0", "ZuMPm]CL2DdO8Hu%gVC7",
+            $this->connection = new PDO('mysql:host=localhost;dbname=backup test', USER, PASSWORD,
+            // $this->connection = new PDO('mysql:host=localhost;dbname=sitemanager', "bitrix0", "ZuMPm]CL2DdO8Hu%gVC7",
             [
                 //В случае проблем выбрасывать исключение
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -136,7 +136,7 @@ function write_insert(array $location)
     $t_start=time();
     $create=get_db_create_tables();
     $bf=fopen('insert.sql', 'a+') or die ("Не удалось открыть файл");
-    while(time()-$t_start<=1790)
+    while(time()-$t_start<=1500)
     {
         $content="";
         if($location['table']>=count($create))
@@ -220,7 +220,24 @@ if(count($_GET)>0)
     }
     if($_GET['process']=="compress")
     {
-        exit("ok");
+        // $t_start=time();
+        // while(time()-$t_start<=1500)
+        // {
+        // }
+        $z = new ZipArchive();
+        $res = $z -> open('test.zip', ZipArchive::CREATE);
+        if($res==true)
+        {
+            $z->addFile('data.txt', 'entryname.txt');
+            $z->close();
+            echo "ok";
+        }
+        else
+        {
+            $z->close();
+            echo "error";
+        }
+        exit("process completed successfully");
     }
 }
 else{
