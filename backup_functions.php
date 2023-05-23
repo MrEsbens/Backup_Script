@@ -202,6 +202,26 @@ function refresh($location)
         header("Location: ".$url);
     }
 }
+function compress (string $server_directory)
+{
+    // $t_start=time();
+    // while(time()-$t_start<=1500)
+    // {
+    // }
+    $z = new ZipArchive();
+    $res = $z -> open('test.zip', ZipArchive::CREATE);
+    if($res==true)
+    {
+        echo "zip file created successfully <br/>";
+        $z->addFile('data.txt', 'entryname.txt');
+        $z->close();
+    }
+    else
+    {
+        $z->close();
+        exit("can't create zip file <br/>");
+    }
+}
 
 
 if(count($_GET)>0)
@@ -220,23 +240,10 @@ if(count($_GET)>0)
     }
     if($_GET['process']=="compress")
     {
-        // $t_start=time();
-        // while(time()-$t_start<=1500)
-        // {
-        // }
-        $z = new ZipArchive();
-        $res = $z -> open('test.zip', ZipArchive::CREATE);
-        if($res==true)
-        {
-            $z->addFile('data.txt', 'entryname.txt');
-            $z->close();
-            echo "ok";
-        }
-        else
-        {
-            $z->close();
-            echo "error";
-        }
+        $server_directory = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $server_directory = explode('?', $server_directory);
+        $server_directory = $server_directory[0];
+        compress($server_directory);
         exit("process completed successfully");
     }
 }
